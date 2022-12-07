@@ -29,6 +29,7 @@ namespace Caliph.API.Controllers
                 {
                     response.StatusCode = APIStatusCode.INVALID_PARAM_CODE;
                     response.StatusMsg = APIStatusCode.INVALID_PARAM_MSG;
+                    // code for resources 
 
                     // test 
                     return Ok(response);

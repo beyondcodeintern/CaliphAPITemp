@@ -1098,7 +1098,7 @@ namespace Caliph.API.Controllers
             {
                 response.StatusCode = APIStatusCode.FAIL_CODE;
                 response.StatusMsg = APIStatusCode.FAIL_MSG;
-
+                // testing 
                 LogHelper.Error(LogHelper.LogFormat(MethodBase.GetCurrentMethod().Name, functionParam, ex.ToString()));
             }
             finally
