@@ -173,7 +173,7 @@ namespace Caliph.API.Controllers
 
         
         [HttpPost]
-        [Route("get-by-id")]
+        [Route("get-by-Resources-id")]
         public IHttpActionResult GetResourceById([FromBody] ResourceFilterRequest request)
         {
             var response = new ResponseApiModel();
@@ -304,7 +304,7 @@ namespace Caliph.API.Controllers
 
 
         [HttpPost]
-        [Route("get-by-filter")]
+        [Route("get-by-Resources-filter")]
         public IHttpActionResult GetResourceByFilter ([FromBody] ResourceFilterRequest request)
         {
             var response = new ResponseApiModel();
