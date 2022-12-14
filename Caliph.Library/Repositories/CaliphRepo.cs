@@ -7114,21 +7114,21 @@ FETCH NEXT @PAGESIZE ROWS ONLY
                 {
                     var query = $@"
 
-INSERT INTO [dbo].[Resources] (
+INSERT INTO [dbo].[Resource] (
 [Name]
 , [Url]
-, [UserId]
+, [UserName]
 , [StatusId]
 , [CreatedBy]
 , [CreatedDate])
-	VALUES (@Name, @Url, @UserId, @StatusId, @CreatedBy, GETDATE());
+	VALUES (@Name, @Url, @UserName, @StatusId, @CreatedBy, GETDATE());
                     ";
 
                     var param = new DynamicParameters();
                    
                     param.Add("@Name", obj.Name, dbType: DbType.AnsiString);
                     param.Add("@Url", obj.Url, dbType: DbType.AnsiString);
-                    param.Add("@UserId", obj.UserId, dbType: DbType.Int64);
+                    param.Add("@UserName", obj.UserName, dbType: DbType.AnsiString);
                    
                     param.Add("@StatusId", obj.StatusId, dbType: DbType.Int64);
                     param.Add("@CreatedBy", obj.CreatedBy, dbType: DbType.AnsiString);
@@ -7152,10 +7152,10 @@ INSERT INTO [dbo].[Resources] (
                 using (var conn = new SqlConnection(_connectionString))
                 {
                     var query = $@"
-UPDATE [Resources]
+UPDATE [Resource]
 SET Name = @Name
     ,Url = @Url
-    ,UserId = @UserId
+    ,UserName = @UserName
     ,StatusId = @StatusId
    ,UpdatedBy = @UpdatedBy
    ,UpdatedDate = GETDATE()
@@ -7166,7 +7166,7 @@ WHERE ResourceId = @ResourceId;
                     param.Add("@ResourceId", obj.ResourceId, dbType: DbType.Int64);
                     param.Add("@Name", obj.Name, dbType: DbType.AnsiString);
                     param.Add("@Url", obj.Url, dbType: DbType.AnsiString);
-                    param.Add("@UserId", obj.UserId, dbType: DbType.Int64);
+                    param.Add("@UserName", obj.UserName, dbType: DbType.AnsiString);
                     param.Add("@StatusId", obj.StatusId, dbType: DbType.Int64);
                     param.Add("@UpdatedBy", obj.UpdatedBy, dbType: DbType.AnsiString);
 
@@ -7189,7 +7189,7 @@ WHERE ResourceId = @ResourceId;
                 using (var conn = new SqlConnection(_connectionString))
                 {
                     var reqUpdateResourceToConfirmQuery = $@"
-UPDATE Resources
+UPDATE Resource
     SET StatusId = {(long)MasterDataEnum.Status_Inactive},
     UpdatedBy = @UpdatedBy,
     UpdatedDate = GETDATE()
@@ -7246,15 +7246,15 @@ WHERE ClientDealId = @ClientDealId;
                     var query = $@"
                          SELECT
                         R.*,
-                        U.*
+                        U.Username
                         FROM 
-                        Resources R inner join Users U on
-                        R.UserId = U.UserId
+                        Resource R inner join Users U on
+                        R.UserName = U.UserName
                         WHERE    
                         (@Name IS NULL OR R.Name LIKE '%' + @Name + '%') AND
                         (@CreatedDateFrom IS NULL OR R.CreatedDate >= 2022/11/26) AND
                         (@CreatedDateTo IS NULL OR R.CreatedDate <= @CreatedDateTo) AND
-                        (@ResourceId IS NULL OR  R.ResourceId = @ResourceId) AND
+                        (@ResourceId IS NULL OR  ResourceId = @ResourceId) AND
                         R.StatusId NOT IN (2)
                         ORDER BY
                         R.ResourceId;
@@ -7269,6 +7269,40 @@ WHERE ClientDealId = @ClientDealId;
                     param.Add("@CreatedDateTo", createdDateTo, dbType: DbType.DateTime);
                  
 
+
+                    oResult = conn.Query<ResourcesEnt>(query, param, commandType: CommandType.Text).ToList();
+                }
+            }
+            catch (SqlException ex)
+            {
+                LogHelper.Error(LogHelper.LogFormat(MethodBase.GetCurrentMethod().Name, "", ex.ToString()));
+                throw ex;
+            }
+
+            return oResult;
+        }
+
+
+        internal List<ResourcesEnt> GetResourceByUsername(ResourceUserRequest obj)
+        {
+            List<ResourcesEnt> oResult = null;
+            try
+            {
+                using (var conn = new SqlConnection(_connectionString))
+                {
+                    var query = @"
+                        SELECT
+	                    Resoruce.*
+                        FROM
+                        Resource
+                        WHERE
+                        UserName = @Username
+                       
+                    ";
+
+                    var param = new DynamicParameters();
+                    param.Add("@Username", obj.Username, dbType: DbType.AnsiString);
+                   
 
                     oResult = conn.Query<ResourcesEnt>(query, param, commandType: CommandType.Text).ToList();
                 }

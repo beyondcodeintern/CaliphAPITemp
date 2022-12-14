@@ -31,7 +31,7 @@ namespace Caliph.API.Models
 
         public string Url { get; set; }
 
-        public long? UserId { get; set; }
+        //public long? UserId { get; set; }
 
         public string UserName { get; set; }
 
