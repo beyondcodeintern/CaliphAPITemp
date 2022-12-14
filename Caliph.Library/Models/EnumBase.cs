@@ -31,7 +31,8 @@
         QuizScore = 27,
         UserEventStatusId = 28,
         PaymentChannel = 29,
-        PaymentStatus = 30
+        PaymentStatus = 30,
+        ResoruceStatus = 36
     }
 
     public enum MasterDataEnum : long

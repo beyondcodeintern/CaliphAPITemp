@@ -19,55 +19,55 @@ namespace Caliph.API.Controllers
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        //[HttpPost]
-        //[Route("get")]
-        //public IHttpActionResult GetResourceUsernameRequest ([FromBody]ResourceUserRequest request)
-        //{
-        //    var response = new ResponseApiModel();
-        //    string functionParam = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:ffff");
+        [HttpPost]
+        [Route("get")]
+        public IHttpActionResult GetResourceUsernameRequest([FromBody] ResourceUserRequest request)
+        {
+            var response = new ResponseApiModel();
+            string functionParam = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:ffff");
 
-        //    try
-        //    {
-        //        if (request == null || string.IsNullOrEmpty(request.Username))
-        //        {
-        //            response.StatusCode = APIStatusCode.INVALID_PARAM_CODE;
-        //            response.StatusMsg = APIStatusCode.INVALID_PARAM_MSG;
-        //            return Ok(response);
-        //        }
+            try
+            {
+                if (request == null || string.IsNullOrEmpty(request.Username))
+                {
+                    response.StatusCode = APIStatusCode.INVALID_PARAM_CODE;
+                    response.StatusMsg = APIStatusCode.INVALID_PARAM_MSG;
+                    return Ok(response);
+                }
 
-        //        var oCaliphService = new CaliphService();
-        //        var oUsersEnt = oCaliphService.GetResourceByUsername(request);
-        //        if (oUsersEnt == null)
-        //        {
-        //            response.StatusCode = APIStatusCode.INVALID_SYSTEM_USER_CODE;
-        //            response.StatusMsg = APIStatusCode.INVALID_SYSTEM_USER_MSG;
-        //            return Ok(response);
-        //        }
+                var oCaliphService = new CaliphService();
+                var oUsersEnt = oCaliphService.GetResourceByUsername(request);
+                if (oUsersEnt == null)
+                {
+                    response.StatusCode = APIStatusCode.INVALID_SYSTEM_USER_CODE;
+                    response.StatusMsg = APIStatusCode.INVALID_SYSTEM_USER_MSG;
+                    return Ok(response);
+                }
 
-               
 
-          
-        //        response.data = oUsersEnt;
-        //        response.StatusCode = APIStatusCode.SUCC_CODE;
-        //        response.StatusMsg = APIStatusCode.SUCC_MSG;
 
-                
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        response.StatusCode = APIStatusCode.FAIL_CODE;
-        //        response.StatusMsg = APIStatusCode.FAIL_MSG;
 
-        //        LogHelper.Error(LogHelper.LogFormat(MethodBase.GetCurrentMethod().Name, functionParam, ex.ToString()));
-        //    }
-        //    finally
-        //    {
-        //        functionParam += "|Response: " + new JavaScriptSerializer().Serialize(response);
-        //        LogHelper.Info(LogHelper.LogFormat(MethodBase.GetCurrentMethod().Name, functionParam, "", false));
-        //    }
+                response.data = oUsersEnt;
+                response.StatusCode = APIStatusCode.SUCC_CODE;
+                response.StatusMsg = APIStatusCode.SUCC_MSG;
 
-        //    return Ok(response);
-        //}
+
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = APIStatusCode.FAIL_CODE;
+                response.StatusMsg = APIStatusCode.FAIL_MSG;
+
+                LogHelper.Error(LogHelper.LogFormat(MethodBase.GetCurrentMethod().Name, functionParam, ex.ToString()));
+            }
+            finally
+            {
+                functionParam += "|Response: " + new JavaScriptSerializer().Serialize(response);
+                LogHelper.Info(LogHelper.LogFormat(MethodBase.GetCurrentMethod().Name, functionParam, "", false));
+            }
+
+            return Ok(response);
+        }
 
 
 
@@ -93,23 +93,17 @@ namespace Caliph.API.Controllers
 
                 var oCaliphService = new CaliphService();
 
-                //var checkuplinecheckuplineEnt = new ResourceUserRequest() { Username = request.UserName };
-                //var oUplineUsersEnt = oCaliphService.GetResourceByUsername(checkuplinecheckuplineEnt);
-                //if (oUplineUsersEnt == null)
-                //{
-                //    response.StatusCode = APIStatusCode.INVALID_UPLINE_USERNAME_CODE;
-                //    response.StatusMsg = APIStatusCode.INVALID_UPLINE_USERNAME_MSG;
-                //    return Ok(response);
-                //}
+                var checkuplinecheckuplineEnt = new ResourceUserRequest() { Username = request.UserName };
+                var oUplineUsersEnt = oCaliphService.GetResourceByUsername(checkuplinecheckuplineEnt);
+                if (oUplineUsersEnt == null)
+                {
+                    response.StatusCode = APIStatusCode.INVALID_SYSTEM_USER_CODE;
+                    response.StatusMsg = APIStatusCode.INVALID_SYSTEM_USER_MSG;
+                    return Ok(response);
+                }
 
 
-                //var oUsersEnt = oCaliphService.GetResourceByFilter(null, request.Name, null, null);
-                //if (oUsersEnt == null)
-                //{
-                //    response.StatusCode = APIStatusCode.INVALID_SYSTEM_USER_CODE;
-                //    response.StatusMsg = APIStatusCode.INVALID_SYSTEM_USER_MSG;
-                //    return Ok(response);
-                //}
+               
 
                 #region bind function param
                 JavaScriptSerializer js = new JavaScriptSerializer();
@@ -119,20 +113,7 @@ namespace Caliph.API.Controllers
                 
 
 
-                //var oResource = oCaliphService.GetResourceByFilter(null, request.Name, request.CreatedDateFrom, request.CreatedDateTo);
-                //if (oResource == null)
-                //{
-                //    response.StatusCode = APIStatusCode.INVALID_RESOURCE_CODE;
-                //    response.StatusMsg = APIStatusCode.INVALID_RESOURCE_MSG;
-                //    return Ok(response);
-                //}
-                //    var oCaliphService = new CaliphService();
-             
-
-
-                // 
-                //                 
-                // */
+           
 
                 var obj = new ResourcesEnt
                 {

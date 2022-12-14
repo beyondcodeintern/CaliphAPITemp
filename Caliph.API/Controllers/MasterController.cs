@@ -1083,11 +1083,8 @@ namespace Caliph.API.Controllers
             try
             {
                 var oCaliphService = new CaliphService();
-                var oStatusList = oCaliphService.GetMasterDataByMasterId((long)MasterEnum.SystemStatus);
-                oStatusList = oStatusList.Where(x => x.MasterDataId == (long)MasterDataEnum.Status_Potential ||
-                x.MasterDataId == (long)MasterDataEnum.Status_Confirm ||
-                x.MasterDataId == (long)MasterDataEnum.Status_Inactive ||
-                x.MasterDataId == (long)MasterDataEnum.Status_Archive).ToList();
+                var oStatusList = oCaliphService.GetMasterDataByMasterId((long)MasterEnum.ResoruceStatus);
+                oStatusList = oStatusList.ToList();
 
                 response.data = oStatusList;
                 response.ItemCount = oStatusList.Count;
