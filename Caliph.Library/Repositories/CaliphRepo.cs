@@ -7292,11 +7292,11 @@ WHERE ClientDealId = @ClientDealId;
                 {
                     var query = @"
                         SELECT
-	                    Resoruce.*
+	                    Username
                         FROM
-                        Resource
+                       Users 
                         WHERE
-                        UserName = @Username
+                        Username = @Username
                        
                     ";
 
