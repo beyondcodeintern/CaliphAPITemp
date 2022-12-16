@@ -1479,6 +1479,25 @@ namespace Caliph.Library
             return obj;
         }
 
+        public ResourcesEnt GetResourceByUsername(ResourceUserRequest request)
+        {
+            var obj = new ResourcesEnt();
+            var oList = _repo.GetResourceByUsername(request);
+            if (oList.Count > 0)
+            {
+                foreach (var item in oList)
+                {
+                    obj = item;
+                }
+            }
+            else
+            {
+                obj = null;
+            }
+
+            return obj;
+        }
+
 
 
         #endregion
