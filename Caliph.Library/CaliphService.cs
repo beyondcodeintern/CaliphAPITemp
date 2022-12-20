@@ -1498,6 +1498,25 @@ namespace Caliph.Library
             return obj;
         }
 
+        public ResourcesEnt ResourceValidation (ResourceValidationRequest request)
+        {
+            var obj = new ResourcesEnt();
+            var oList = _repo.ResourceValidation(request);
+            if (oList.Count > 0)
+            {
+                foreach (var item in oList)
+                {
+                    obj = item;
+                }
+            }
+            else
+            {
+                obj = null;
+            }
+
+            return obj;
+        }
+
 
 
         #endregion
