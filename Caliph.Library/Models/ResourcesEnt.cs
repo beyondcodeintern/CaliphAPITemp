@@ -32,4 +32,10 @@ namespace Caliph.Library.Models
         public string Username { get; set; }
       
     }
+
+    public class ResourceValidationRequest : BaseEnt
+    {
+        public string Name { get; set; }
+        public string UserName { get; set; }
+    }
 }

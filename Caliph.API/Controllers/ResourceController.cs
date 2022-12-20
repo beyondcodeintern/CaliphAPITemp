@@ -3,7 +3,6 @@ using Caliph.Library;
 using Caliph.Library.Helper;
 using Caliph.Library.Models;
 using System;
-using System.Collections.Generic;
 using System.Reflection;
 using System.Web.Http;
 using System.Web.Script.Serialization;
@@ -13,12 +12,7 @@ namespace Caliph.API.Controllers
     [RoutePrefix("api/v1/Resource")]
     public class ResourceController :BaseController
     {
-        // GET: Resource
-        /// <summary>
-        /// Get client Deal id
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
+        //Get User
         [HttpPost]
         [Route("get")]
         public IHttpActionResult GetResourceUsernameRequest([FromBody] ResourceUserRequest request)
@@ -70,12 +64,10 @@ namespace Caliph.API.Controllers
         }
 
 
-
-
+        //Check if have same resource name with same user
         [HttpPost]
-        [Route("add")]
-
-        public IHttpActionResult AddResource([FromBody] ResourceFilterRequest request)
+        [Route("validation")]
+        public IHttpActionResult ResourceValidation([FromBody] ResourceValidationRequest request)
         {
             var response = new ResponseApiModel();
             string functionParam = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:ffff");
@@ -93,6 +85,79 @@ namespace Caliph.API.Controllers
 
                 var oCaliphService = new CaliphService();
 
+                //var checkuplinecheckuplineEnt = new ResourceUserRequest() { Username = request.UserName };
+                //var oUplineUsersEnt = oCaliphService.GetResourceByUsername(checkuplinecheckuplineEnt);
+                //if (oUplineUsersEnt == null)
+                //{
+                //    response.StatusCode = APIStatusCode.INVALID_SYSTEM_USER_CODE;
+                //    response.StatusMsg = APIStatusCode.INVALID_SYSTEM_USER_MSG;
+                //    return Ok(response);
+                //}
+
+                var validation = new ResourceValidationRequest() { Name= request.Name, UserName = request.UserName };
+                var validationResourceEnt = oCaliphService.ResourceValidation(validation);
+                if (validationResourceEnt == null)
+                {
+                    response.StatusCode = APIStatusCode.INVALID_RESOURCE_DUPLICATE_CODE;
+                    response.StatusMsg = APIStatusCode.INVALID_RESOURCE_DUPLICATE_MSG;
+                    return Ok(response);
+                }
+
+
+
+                #region bind function param
+                JavaScriptSerializer js = new JavaScriptSerializer();
+                functionParam += new JavaScriptSerializer().Serialize(request);
+                #endregion
+
+                response.data = validation ;
+                response.StatusCode = APIStatusCode.SUCC_CODE;
+                response.StatusMsg = APIStatusCode.SUCC_MSG;
+
+
+            }
+            catch (Exception ex)
+            {
+                response.StatusCode = APIStatusCode.FAIL_CODE;
+                response.StatusMsg = APIStatusCode.FAIL_MSG;
+
+                LogHelper.Error(LogHelper.LogFormat(MethodBase.GetCurrentMethod().Name, functionParam, ex.ToString()));
+            }
+            finally
+            {
+                functionParam += "|Response: " + new JavaScriptSerializer().Serialize(response);
+                LogHelper.Info(LogHelper.LogFormat(MethodBase.GetCurrentMethod().Name, functionParam, "", false));
+            }
+
+            return Ok(response);
+
+
+
+
+        }
+
+        //Get user and validate then add
+        [HttpPost]
+        [Route("add")]
+        public IHttpActionResult AddResource([FromBody] ResourceFilterRequest request)
+        {
+            var response = new ResponseApiModel();
+            string functionParam = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:ffff");
+
+            try
+            {
+                //Resource Name cannot be empty
+                if (request == null || string.IsNullOrEmpty(request.Name))
+                {
+                    response.StatusCode = APIStatusCode.INVALID_PARAM_CODE;
+                    response.StatusMsg = APIStatusCode.INVALID_PARAM_MSG;
+
+                    return Ok(response);
+                }
+
+                var oCaliphService = new CaliphService();
+
+                //Valid User
                 var checkuplinecheckuplineEnt = new ResourceUserRequest() { Username = request.UserName };
                 var oUplineUsersEnt = oCaliphService.GetResourceByUsername(checkuplinecheckuplineEnt);
                 if (oUplineUsersEnt == null)
@@ -102,19 +167,23 @@ namespace Caliph.API.Controllers
                     return Ok(response);
                 }
 
+                //Check if have same resource name with same user
+                var validation = new ResourceValidationRequest() { Name = request.Name, UserName = request.UserName };
+                var validationResourceEnt = oCaliphService.ResourceValidation(validation);
+                if (validationResourceEnt != null)
+                {
+                    response.StatusCode = APIStatusCode.INVALID_RESOURCE_DUPLICATE_CODE;
+                    response.StatusMsg = APIStatusCode.INVALID_RESOURCE_DUPLICATE_MSG;
+                    return Ok(response);
+                }
 
-               
 
                 #region bind function param
                 JavaScriptSerializer js = new JavaScriptSerializer();
                 functionParam += new JavaScriptSerializer().Serialize(request);
                 #endregion
 
-                
-
-
-           
-
+                //add
                 var obj = new ResourcesEnt
                 {
                   
@@ -173,8 +242,6 @@ namespace Caliph.API.Controllers
                     return Ok(response);
                 }
 
-
-
                 if (String.IsNullOrEmpty(request.UpdatedBy))
                 {
                     response.StatusCode = APIStatusCode.INVALID_UPDATED_BY_CODE;
@@ -192,7 +259,17 @@ namespace Caliph.API.Controllers
                      return Ok(response);
                  }
 
-                 
+                //Valid User
+                var checkuplinecheckuplineEnt = new ResourceUserRequest() { Username = request.UserName };
+                var oUplineUsersEnt = oCaliphService.GetResourceByUsername(checkuplinecheckuplineEnt);
+                if (oUplineUsersEnt == null)
+                {
+                    response.StatusCode = APIStatusCode.INVALID_SYSTEM_USER_CODE;
+                    response.StatusMsg = APIStatusCode.INVALID_SYSTEM_USER_MSG;
+                    return Ok(response);
+                }
+
+
                 var oUpdateResource = new ResourcesEnt
                 {
                     ResourceId = request.ResourceId,

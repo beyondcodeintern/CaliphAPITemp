@@ -89,6 +89,8 @@
         public static readonly string DUPLICATE_CLIENT_CONTACT = "1040";
         public static readonly string DUPLICATE_CLIENT_CONTACT_MSG = "Duplicate client with same contact number ";
         public static readonly string INVALID_RESOURCE_CODE= "1041";
-        public static readonly string INVALID_RESOURCE_MSG = "Invalid Resouce ID";
+        public static readonly string INVALID_RESOURCE_MSG = "Invalid Resource ID";
+        public static readonly string INVALID_RESOURCE_DUPLICATE_CODE = "1042";
+        public static readonly string INVALID_RESOURCE_DUPLICATE_MSG = "Resource already exiist!!";
     }
 }

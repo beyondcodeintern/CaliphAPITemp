@@ -7315,6 +7315,47 @@ WHERE ClientDealId = @ClientDealId;
 
             return oResult;
         }
+
+
+        internal List<ResourcesEnt> ResourceValidation(ResourceValidationRequest obj)
+        {
+            List<ResourcesEnt> oResult = null;
+            try
+            {
+                using (var conn = new SqlConnection(_connectionString))
+                {
+                    var query = @"
+                      SELECT
+	                    R.Name,R.UserName,
+						U.UserName
+                        FROM
+                       Users U inner join Resource R on U.Username = R.UserName
+                        WHERE
+                        R.Username = @Username AND
+						R.Name = @Name
+                       
+                    ";
+
+                    var param = new DynamicParameters();
+                    param.Add("@Name", obj.Name, dbType: DbType.AnsiString);
+                    param.Add("@Username", obj.UserName, dbType: DbType.AnsiString);
+
+
+                    oResult = conn.Query<ResourcesEnt>(query, param, commandType: CommandType.Text).ToList();
+                }
+            }
+            catch (SqlException ex)
+            {
+                LogHelper.Error(LogHelper.LogFormat(MethodBase.GetCurrentMethod().Name, "", ex.ToString()));
+                throw ex;
+            }
+
+            return oResult;
+        }
+
+
+
+
         #endregion
 
 
